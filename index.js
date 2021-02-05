@@ -33,7 +33,12 @@ app.get('/api/persons/:id', (request, response) => {
   console.log(id)
   const person = persons.find(person => person.id === id)
   console.log(person)
-  response.json(person)
+  if (person) { //javascript olio on truthy
+    response.json(person)
+  } else { //jos tulee undefined niin mennään tänne koska aúndefined on falsy
+    response.status(404).end()
+  }
+  
 })
 
 app.get('/info', (req, res) => {

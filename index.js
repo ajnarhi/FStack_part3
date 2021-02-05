@@ -27,6 +27,15 @@ app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
+
+app.get('/api/persons/:id', (request, response) => {
+  const id = Number( request.params.id) // id on stringinä ja se halutaan muuttaa numeroksi, koska vertailu alla ei tunnista stringiä samaksi kuin numberia (person.id on number)
+  console.log(id)
+  const person = persons.find(person => person.id === id)
+  console.log(person)
+  response.json(person)
+})
+
 app.get('/info', (req, res) => {
   const personsAmount= persons.length
   var d = new Date();

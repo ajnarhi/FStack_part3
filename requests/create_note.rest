@@ -7,4 +7,48 @@ POST http://localhost:3001/api/persons
 "number": "1234556"
 
   }
+###
+  POST http://localhost:3001/api/persons
+  Content-Type: application/json
+
+  {
+    
+"name": "",
+"number": "1234556"
+
+  }
+
+###
+  POST http://localhost:3001/api/persons
+  Content-Type: application/json
+
+  {
+    
+"name": "Testityyppi",
+"number": ""
+
+  }
+
+###
+  POST http://localhost:3001/api/persons
+  Content-Type: application/json
+
+  {
+    
+"name": "",
+"number": ""
+
+  }
+
+###
+  POST http://localhost:3001/api/persons
+  Content-Type: application/json
+
+  {
+    
+"name": "Pata",
+"number": "1234"
+
+  }
+
 

@@ -41,6 +41,13 @@ app.get('/api/persons/:id', (request, response) => {
   
 })
 
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  persons = persons.filter(person => person.id !== id) //filter luo uuden lista personeita ehdolla, että valittu id ei tule mukaan
+
+  response.status(204).end()
+})
+
 app.get('/info', (req, res) => {
   const personsAmount= persons.length
   var d = new Date();

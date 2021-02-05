@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 app.use(express.json())
+var morgan = require('morgan')
+app.use((morgan('tiny')))
 
 let persons = [
   {
@@ -19,9 +21,21 @@ let persons = [
     number: "3333333"
   }
 ]
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
+
+
+app.get('/', function (request, response) {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.url)
+  console.log('headers: ',request.headers)
+  console.log('URL: ', request.url)
+  console.log('Parameters: ', request.params)
+  console.log('---')    
+  response.send('<h1>Hello World!</h1>')
 })
+// app.get('/', (req, res) => {
+//   res.send('<h1>Hello World!</h1>')
+// })
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
@@ -90,6 +104,8 @@ app.get('/info', (req, res) => {
   var d = new Date();
   res.send('<p>There are ' + personsAmount + ' persons on phonebook </p>' + d.toLocaleString())
 })
+
+
 
 const PORT = 3001
 app.listen(PORT, () => {

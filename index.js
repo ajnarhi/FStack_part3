@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-
+app.use(express.json())
 
 let persons = [
   {
@@ -29,7 +29,7 @@ app.get('/api/persons', (req, res) => {
 
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number( request.params.id) // id on stringinä ja se halutaan muuttaa numeroksi, koska vertailu alla ei tunnista stringiä samaksi kuin numberia (person.id on number)
+  const id = Number(request.params.id) // id on stringinä ja se halutaan muuttaa numeroksi, koska vertailu alla ei tunnista stringiä samaksi kuin numberia (person.id on number)
   console.log(id)
   const person = persons.find(person => person.id === id)
   console.log(person)
@@ -38,7 +38,7 @@ app.get('/api/persons/:id', (request, response) => {
   } else { //jos tulee undefined niin mennään tänne koska aúndefined on falsy
     response.status(404).end()
   }
-  
+
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -48,10 +48,40 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
+
+
+const generateId = () => {
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  const newId = getRandomInt(10000000000)
+  return newId 
+}
+
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  if (!body.name) {
+    return response.status(400).json({
+      error: 'name missing'
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  }
+
+  persons = persons.concat(person)
+  response.json(person)
+})
+
 app.get('/info', (req, res) => {
-  const personsAmount= persons.length
+  const personsAmount = persons.length
   var d = new Date();
-  res.send('<p>There are '+personsAmount+' persons on phonebook </p>' + d.toLocaleString())
+  res.send('<p>There are ' + personsAmount + ' persons on phonebook </p>' + d.toLocaleString())
 })
 
 const PORT = 3001

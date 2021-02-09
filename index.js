@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 app.use(express.json())
@@ -7,6 +8,7 @@ const cors = require('cors')
 app.use(express.static('build'))
 
 app.use(cors())
+const Person = require('./models/persons')
 
 let persons = [
   {
@@ -41,8 +43,10 @@ app.get('/', function (request, response) {
 //   res.send('<h1>Hello World!</h1>')
 // })
 
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
+app.get('/api/persons', (req, response) => {
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 
@@ -93,25 +97,29 @@ app.post('/api/persons', (request, response) => {
     error: 'name already on list'
   })  
   }
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId(),
-  }
+  })
 
-  persons = persons.concat(person)
-  response.json(person)
+  //persons = persons.concat(person)
+  person.save().then(savedPersons => {//save is not a function virhe. kokeiltu person.save ja Person.save, mutta miksi ei futaa?
+    response.json(savedPersons)
+  })
+  
+  //response.json(person)
 })
 
 app.get('/info', (req, res) => {
   const personsAmount = persons.length
-  var d = new Date();
+  var d = new Date();https://mail.google.com/mail/u/0/#inbox
   res.send('<p>There are ' + personsAmount + ' persons on phonebook </p>' + d.toLocaleString())
 })
 
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

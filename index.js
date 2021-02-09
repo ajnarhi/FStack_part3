@@ -10,23 +10,23 @@ app.use(express.static('build'))
 app.use(cors())
 const Person = require('./models/persons')
 
-let persons = [
-  {
-    id: 1,
-    name: "Risti",
-    number: "1111111"
-  },
-  {
-    id: 2,
-    name: "Hertta",
-    number: "2222222"
-  },
-  {
-    id: 3,
-    name: "Pata",
-    number: "3333333"
-  }
-]
+// let persons = [
+//   {
+//     id: 1,
+//     name: "Risti",
+//     number: "1111111"
+//   },
+//   {
+//     id: 2,
+//     name: "Hertta",
+//     number: "2222222"
+//   },
+//   {
+//     id: 3,
+//     name: "Pata",
+//     number: "3333333"
+//   }
+// ]
 
 
 app.get('/', function (request, response) {
@@ -64,22 +64,23 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id) //filter luo uuden lista personeita ehdolla, että valittu id ei tule mukaan
+  const id = request.params.id
+  Person.findById(id).then(response=> response.delete())
+  //persons = persons.filter(person => person.id !== id) //filter luo uuden lista personeita ehdolla, että valittu id ei tule mukaan
 
   response.status(204).end()
 })
 
 
 
-const generateId = () => {
-  function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
-  }
+// const generateId = () => {
+//   function getRandomInt(max) {
+//     return Math.floor(Math.random() * Math.floor(max));
+//   }
 
-  const newId = getRandomInt(10000000000)
-  return newId 
-}
+//   const newId = getRandomInt(10000000000)
+//   return newId 
+// }
 
 
 app.post('/api/persons', (request, response) => {
@@ -100,7 +101,7 @@ app.post('/api/persons', (request, response) => {
   const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
+    //id: generateId(),
   })
 
   //persons = persons.concat(person)

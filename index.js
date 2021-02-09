@@ -10,23 +10,6 @@ app.use(express.static('build'))
 app.use(cors())
 const Person = require('./models/persons')
 
-// let persons = [
-//   {
-//     id: 1,
-//     name: "Risti",
-//     number: "1111111"
-//   },
-//   {
-//     id: 2,
-//     name: "Hertta",
-//     number: "2222222"
-//   },
-//   {
-//     id: 3,
-//     name: "Pata",
-//     number: "3333333"
-//   }
-// ]
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
@@ -76,16 +59,18 @@ app.get('/api/persons/:id', (request, response, next) => {
 
   })
 
-  .catch(error => next(error))
+  .catch(error => next(error)) //middleware
 })
 
 
-  app.delete('/api/persons/:id', (request, response) => {
+  app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     Person.findById(id).then(response => response.delete())
+    .catch(error => next(error))
     //persons = persons.filter(person => person.id !== id) //filter luo uuden lista personeita ehdolla, että valittu id ei tule mukaan
 
     response.status(204).end()
+    
   })
 
 
@@ -122,7 +107,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     })
 
     //persons = persons.concat(person)
-    person.save().then(savedPersons => {//save is not a function virhe. kokeiltu person.save ja Person.save, mutta miksi ei futaa?
+    person.save().then(savedPersons => {
       response.json(savedPersons)
     })
 
@@ -130,9 +115,10 @@ app.get('/api/persons/:id', (request, response, next) => {
   })
 
   app.get('/info', (req, res) => {
-    const personsAmount = persons.length
-    var d = new Date(); https://mail.google.com/mail/u/0/#inbox
-    res.send('<p>There are ' + personsAmount + ' persons on phonebook </p>' + d.toLocaleString())
+   Person.count({}).then(count =>
+    {var d = new Date(); 
+    res.send('<p>There are ' + count + ' persons on phonebook </p>' + d.toLocaleString())
+    })
   })
 
 

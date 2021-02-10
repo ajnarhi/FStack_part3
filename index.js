@@ -15,8 +15,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+   } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
-
   next(error)
 }
 
@@ -95,10 +96,10 @@ app.get('/api/persons/:id', (request, response, next) => {
       return response.status(400).json({
         error: 'number missing'
       })
-    } else if (persons.some(person => person.name === body.name)) {
-      return response.status(400).json({
-        error: 'name already on list'
-      })
+    //} else if (persons.some(person => person.name === body.name)) {
+      //return response.status(400).json({
+        //error: 'name already on list'
+      //})
     }
     const person = new Person({
       name: body.name,

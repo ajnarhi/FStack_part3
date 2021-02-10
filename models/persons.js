@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+var uniqueValidator = require('mongoose-unique-validator');
 
 //const password = process.argv[2]
 
@@ -16,9 +17,11 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 })
 
 const personsSchema = new mongoose.Schema({
-  name: String,
-  number: String
-
+  name: {
+    type:String, required: true, unique: true 
+  },
+  number:String,
+  
 })
 personsSchema.set('toJSON', {
   transform: (document, returnedObject) => {
@@ -28,6 +31,7 @@ personsSchema.set('toJSON', {
   }
 })
 
+personsSchema.plugin(uniqueValidator)
 module.exports = mongoose.model('PersonsOnPhonebook', personsSchema)
 
 //const Person = mongoose.model('PersonsOnPhonebook', personsSchema)

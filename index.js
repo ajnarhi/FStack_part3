@@ -86,7 +86,7 @@ app.get('/api/persons/:id', (request, response, next) => {
   // }
 
 
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response, next) => {
     const body = request.body
     if (!body.name) {
       return response.status(400).json({
@@ -110,7 +110,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     //persons = persons.concat(person)
     person.save().then(savedPersons => {
       response.json(savedPersons)
-    })
+    }).catch(error => next(error))
 
     //response.json(person)
   })

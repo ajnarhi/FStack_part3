@@ -61,4 +61,15 @@ POST http://localhost:3001/api/persons
 "number": "1234"
 
   }
+###
+
+  POST http://localhost:3001/api/persons
+  Content-Type: application/json
+
+  {
+    
+"name": "Anu",
+"number": "1234"
+
+  }
 

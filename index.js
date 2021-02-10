@@ -15,7 +15,7 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-   } else if (error.name === 'ValidationError') {
+  } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
   next(error)
@@ -60,71 +60,47 @@ app.get('/api/persons/:id', (request, response, next) => {
 
   })
 
-  .catch(error => next(error)) //middleware
+    .catch(error => next(error)) //middleware
+})
+
+app.delete('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id
+  Person.findById(id).then(response => response.delete())
+    .catch(error => next(error))
+
+  response.status(204).end()
+
 })
 
 
-  app.delete('/api/persons/:id', (request, response, next) => {
-    const id = request.params.id
-    Person.findById(id).then(response => response.delete())
-    .catch(error => next(error))
-    //persons = persons.filter(person => person.id !== id) //filter luo uuden lista personeita ehdolla, että valittu id ei tule mukaan
 
-    response.status(204).end()
-    
+app.post('/api/persons', (request, response, next) => {
+  const body = request.body
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+
   })
 
 
-
-  // const generateId = () => {
-  //   function getRandomInt(max) {
-  //     return Math.floor(Math.random() * Math.floor(max));
-  //   }
-
-  //   const newId = getRandomInt(10000000000)
-  //   return newId 
-  // }
+  person.save().then(savedPersons => {
+    response.json(savedPersons)
+  }).catch(error => next(error))
 
 
-  app.post('/api/persons', (request, response, next) => {
-    const body = request.body
-    if (!body.name) {
-      return response.status(400).json({
-        error: 'name missing'
-      })
-    } else if (!body.number) {
-      return response.status(400).json({
-        error: 'number missing'
-      })
-    //} else if (persons.some(person => person.name === body.name)) {
-      //return response.status(400).json({
-        //error: 'name already on list'
-      //})
-    }
-    const person = new Person({
-      name: body.name,
-      number: body.number,
-      //id: generateId(),
-    })
+})
 
-    //persons = persons.concat(person)
-    person.save().then(savedPersons => {
-      response.json(savedPersons)
-    }).catch(error => next(error))
-
-    //response.json(person)
-  })
-
-  app.get('/info', (req, res) => {
-   Person.count({}).then(count =>
-    {var d = new Date(); 
+app.get('/info', (req, res) => {
+  Person.count({}).then(count => {
+    var d = new Date();
     res.send('<p>There are ' + count + ' persons on phonebook </p>' + d.toLocaleString())
-    })
   })
+})
 
 
 
-  const PORT = process.env.PORT
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-  })
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
